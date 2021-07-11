@@ -33,11 +33,11 @@ CREATE TABLE IF NOT EXISTS `service`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
   `firstname` VARCHAR(45) NOT NULL,
-  `middlename` VARCHAR(45) NULL,
+  `middle_name` VARCHAR(45) NULL,
   `lastname` VARCHAR(45) NOT NULL,
   `mobile` VARCHAR(45) NOT NULL,
-  `phone_home` VARCHAR(45) NOT NULL,
-  `phone_office` VARCHAR(45) NOT NULL,
+  `phone_home` VARCHAR(45) NULL,
+  `phone_office` VARCHAR(45) NULL,
   `birthdate` VARCHAR(45) NOT NULL,
   `role_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS `service`.`user` (
   CONSTRAINT `fk_user_role`
     FOREIGN KEY (`role_id`)
     REFERENCES `service`.`role` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -65,26 +65,40 @@ CREATE TABLE IF NOT EXISTS `service`.`password` (
   CONSTRAINT `fk_password_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `service`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `service`.`country`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `service`.`country` (
-  `id` INT NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `country` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`country_code` char(3) NOT NULL DEFAULT '',
+	`country_name` varchar(100) NOT NULL DEFAULT '',
+	`currency_code` char(3) DEFAULT NULL,
+	`fips_code` char(2) DEFAULT NULL,
+	`iso_numeric` char(4) DEFAULT NULL,
+	`north` varchar(30) DEFAULT NULL,
+	`south` varchar(30) DEFAULT NULL,
+	`east` varchar(30) DEFAULT NULL,
+	`west` varchar(30) DEFAULT NULL,
+	`capital` varchar(30) DEFAULT NULL,
+	`continent_name` varchar(100) DEFAULT NULL,
+	`continent` char(2) DEFAULT NULL,
+	`languages` varchar(100) DEFAULT NULL,
+	`iso_alpha3` char(3) DEFAULT NULL,
+	`geoname_id` int(10) DEFAULT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- -----------------------------------------------------
 -- Table `service`.`state`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `service`.`state` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `state` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `country_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -92,8 +106,8 @@ CREATE TABLE IF NOT EXISTS `service`.`state` (
   CONSTRAINT `fk_state_country1`
     FOREIGN KEY (`country_id`)
     REFERENCES `service`.`country` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -109,8 +123,8 @@ CREATE TABLE IF NOT EXISTS `service`.`city` (
   CONSTRAINT `fk_city_state1`
     FOREIGN KEY (`state_id`)
     REFERENCES `service`.`state` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -126,8 +140,8 @@ CREATE TABLE IF NOT EXISTS `service`.`district` (
   CONSTRAINT `fk_district_city1`
     FOREIGN KEY (`city_id`)
     REFERENCES `service`.`city` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -159,18 +173,18 @@ CREATE TABLE IF NOT EXISTS `service`.`address` (
   CONSTRAINT `fk_address_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `service`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_address_district1`
     FOREIGN KEY (`district_id`)
     REFERENCES `service`.`district` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_address_location1`
     FOREIGN KEY (`location_id`)
     REFERENCES `service`.`location` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -182,15 +196,15 @@ CREATE TABLE IF NOT EXISTS `service`.`category` (
   `name` VARCHAR(45) NOT NULL,
   `code` VARCHAR(45) NOT NULL,
   `description` VARCHAR(45) NULL,
-  `category_id` INT NOT NULL,
+  `category_id` INT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `code_UNIQUE` (`code` ASC) VISIBLE,
   INDEX `fk_category_category1_idx` (`category_id` ASC) VISIBLE,
   CONSTRAINT `fk_category_category1`
     FOREIGN KEY (`category_id`)
     REFERENCES `service`.`category` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -211,8 +225,8 @@ CREATE TABLE IF NOT EXISTS `service`.`available_service` (
   CONSTRAINT `fk_service_category1`
     FOREIGN KEY (`category_id`)
     REFERENCES `service`.`category` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -222,7 +236,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `service`.`server` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `active` TINYINT NOT NULL DEFAULT 1,
-  `rating` DECIMAL(5,2) NOT NULL DEFAULT 0,
+  `rating` DECIMAL(5,2) NULL DEFAULT 0,
   `price` DECIMAL(15,2) NOT NULL,
   `duration` INT NOT NULL,
   `user_id` INT NOT NULL,
@@ -233,27 +247,14 @@ CREATE TABLE IF NOT EXISTS `service`.`server` (
   CONSTRAINT `fk_server_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `service`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_server_service1`
     FOREIGN KEY (`available_service_id`)
     REFERENCES `service`.`available_service` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `service`.`status_service`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `service`.`status_service` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `code` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `service`.`availability`
@@ -267,8 +268,8 @@ CREATE TABLE IF NOT EXISTS `service`.`availability` (
   `friday` TINYINT NOT NULL DEFAULT 1,
   `saturday` TINYINT NOT NULL DEFAULT 0,
   `sunday` TINYINT NOT NULL DEFAULT 0,
-  `from` TIME NOT NULL,
-  `to` VARCHAR(45) NOT NULL,
+  `time_from` TIME NOT NULL,
+  `time_to` TIME NOT NULL,
   `price` DECIMAL(15,2) NOT NULL,
   `server_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -276,8 +277,8 @@ CREATE TABLE IF NOT EXISTS `service`.`availability` (
   CONSTRAINT `fk_availability_server1`
     FOREIGN KEY (`server_id`)
     REFERENCES `service`.`server` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -286,16 +287,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `service`.`appointment` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `from` DATETIME NOT NULL,
-  `to` DATETIME NOT NULL,
+  `time_from` DATETIME NOT NULL,
+  `time_to` DATETIME NOT NULL,
   `availability_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_appointment_availability1_idx` (`availability_id` ASC) VISIBLE,
   CONSTRAINT `fk_appointment_availability1`
     FOREIGN KEY (`availability_id`)
     REFERENCES `service`.`availability` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -310,29 +311,23 @@ CREATE TABLE IF NOT EXISTS `service`.`service` (
   `comments` VARCHAR(100) NULL,
   `amount` DECIMAL(15,2) NULL DEFAULT 0,
   `duration` INT NULL DEFAULT 0,
-  `status_service_id` INT NOT NULL,
+  `status` VARCHAR(20) NOT NULL,
   `user_id` INT NOT NULL,
-  `cancelation_reason` VARCHAR(45) NULL,
+  `cancellation_reason` VARCHAR(45) NULL,
   `appointment_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_service_status_service1_idx` (`status_service_id` ASC) VISIBLE,
   INDEX `fk_service_user1_idx` (`user_id` ASC) VISIBLE,
   INDEX `fk_service_appointment1_idx` (`appointment_id` ASC) VISIBLE,
-  CONSTRAINT `fk_service_status_service1`
-    FOREIGN KEY (`status_service_id`)
-    REFERENCES `service`.`status_service` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_service_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `service`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_service_appointment1`
     FOREIGN KEY (`appointment_id`)
     REFERENCES `service`.`appointment` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -372,13 +367,13 @@ CREATE TABLE IF NOT EXISTS `service`.`module_permission` (
   CONSTRAINT `fk_module_permission_permission1`
     FOREIGN KEY (`permission_id`)
     REFERENCES `service`.`permission` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_module_permission_module1`
     FOREIGN KEY (`module_id`)
     REFERENCES `service`.`module` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -395,13 +390,13 @@ CREATE TABLE IF NOT EXISTS `service`.`role_permission` (
   CONSTRAINT `fk_role_permission_permission1`
     FOREIGN KEY (`permission_id`)
     REFERENCES `service`.`permission` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_role_permission_role1`
     FOREIGN KEY (`role_id`)
     REFERENCES `service`.`role` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 

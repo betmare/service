@@ -7,6 +7,7 @@
     <groupId>com.belogical</groupId>
     <artifactId>service</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -47,11 +48,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>2.5.1</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -85,9 +81,16 @@
             <artifactId>okhttp</artifactId>
             <version>4.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
     </dependencies>
     <properties>
         <java.version>1.8</java.version>
+        <flyway.user>root</flyway.user>
+        <flyway.password>root</flyway.password>
+        <flyway.schemas>service</flyway.schemas>
     </properties>
 
     <build>
