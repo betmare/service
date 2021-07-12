@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+
 
 @RestController
 @RequestMapping("/v1/schedule")
@@ -28,9 +32,10 @@ public class ScheduleController {
         return ResponseUtil.buildResponse(entityResponse.getEntity(), entityResponse.getStatusCode(), entityResponse.getError());
     }
 
-    @GetMapping(path = "/search-schedule")
+    @GetMapping(path = "/search")
     @ResponseBody
-    public ResponseEntity<Object> getSearchAvailability() {
+    public ResponseEntity<Object> searchAvailability(@RequestParam int serviceId, @RequestParam(required = false) String timeFrom, @RequestParam(required = false) String timeTo, @RequestParam LocalDate requestDate) {
+
         return null;
     }
 }
