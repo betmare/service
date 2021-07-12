@@ -57,10 +57,10 @@ public class Service {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @Column
+  @Column(columnDefinition = "TIME")
   private LocalTime timeFrom;
 
-  @Column
+  @Column(columnDefinition = "TIME")
   private LocalTime timeTo;
 
 
