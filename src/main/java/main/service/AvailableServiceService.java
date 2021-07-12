@@ -29,6 +29,7 @@ public class AvailableServiceService {
                     .suggestedDuration(service.getSuggestedDuration())
                     .suggestedPrice(service.getSuggestedPrice())
                     .build()));
+            error
             return EntityResponse.builder().entity(availableServiceDtos).statusCode(HttpStatus.OK).build();
         } catch (Exception e)
         {
