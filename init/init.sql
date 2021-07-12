@@ -283,24 +283,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `service`.`appointment`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `service`.`appointment` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `time_from` DATETIME NOT NULL,
-  `time_to` DATETIME NOT NULL,
-  `availability_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_appointment_availability1_idx` (`availability_id` ASC) VISIBLE,
-  CONSTRAINT `fk_appointment_availability1`
-    FOREIGN KEY (`availability_id`)
-    REFERENCES `service`.`availability` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `service`.`service`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `service`.`service` (
@@ -314,18 +296,20 @@ CREATE TABLE IF NOT EXISTS `service`.`service` (
   `status` VARCHAR(20) NOT NULL,
   `user_id` INT NOT NULL,
   `cancellation_reason` VARCHAR(45) NULL,
-  `appointment_id` INT NOT NULL,
+  `availability_id` INT NOT NULL,
+  `time_from` TIME NOT NULL,
+  `time_to` TIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_service_user1_idx` (`user_id` ASC) VISIBLE,
-  INDEX `fk_service_appointment1_idx` (`appointment_id` ASC) VISIBLE,
+  INDEX `fk_service_availability1_idx` (`availability_id` ASC) VISIBLE,
   CONSTRAINT `fk_service_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `service`.`user` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_service_appointment1`
-    FOREIGN KEY (`appointment_id`)
-    REFERENCES `service`.`appointment` (`id`)
+  CONSTRAINT `fk_service_availability1`
+    FOREIGN KEY (`availability_id`)
+    REFERENCES `service`.`availability` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;

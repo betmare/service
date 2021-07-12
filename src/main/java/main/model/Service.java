@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table
@@ -49,12 +50,19 @@ public class Service {
   private StatusService status;
 
   @ManyToOne
-  @JoinColumn(name = "appointment_id")
-  private Appointment appointment;
+  @JoinColumn(name = "availability_id")
+  private Availability availability;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
+
+  @Column(columnDefinition = "TIME")
+  private LocalTime timeFrom;
+
+  @Column(columnDefinition = "TIME")
+  private LocalTime timeTo;
+
 
 
   public int getId() {
@@ -128,14 +136,6 @@ public class Service {
     this.cancellationReason = cancellationReason;
   }
 
-  public Appointment getAppointment() {
-    return appointment;
-  }
-
-  public void setAppointment(Appointment appointment) {
-    this.appointment = appointment;
-  }
-
   public User getUser() {
     return user;
   }
@@ -150,7 +150,29 @@ public class Service {
 
   public void setUser(User user) {
     this.user = user;
+  }
 
+  public Availability getAvailability() {
+    return availability;
+  }
 
+  public void setAvailability(Availability availability) {
+    this.availability = availability;
+  }
+
+  public LocalTime getTimeFrom() {
+    return timeFrom;
+  }
+
+  public void setTimeFrom(LocalTime timeFrom) {
+    this.timeFrom = timeFrom;
+  }
+
+  public LocalTime getTimeTo() {
+    return timeTo;
+  }
+
+  public void setTimeTo(LocalTime timeTo) {
+    this.timeTo = timeTo;
   }
 }

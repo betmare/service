@@ -21,17 +21,14 @@ public class AvailableServiceService {
         try {
             List<AvailableService> availableServices = availableServiceRepository.findByNameContainingIgnoreCase(serviceToSearch);
             final List<AvailableServiceDto> availableServiceDtos = new ArrayList<>();
-            availableServices.forEach( service -> {
-                ;
-                availableServiceDtos.add(AvailableServiceDto.builder()
-                        .id(service.getId())
-                        .code(service.getCode())
-                        .description(service.getDescription())
-                        .name(service.getName())
-                        .suggestedDuration(service.getSuggestedDuration())
-                        .suggestedPrice(service.getSuggestedPrice())
-                        .build());
-            });
+            availableServices.forEach( service -> availableServiceDtos.add(AvailableServiceDto.builder()
+                    .id(service.getId())
+                    .code(service.getCode())
+                    .description(service.getDescription())
+                    .name(service.getName())
+                    .suggestedDuration(service.getSuggestedDuration())
+                    .suggestedPrice(service.getSuggestedPrice())
+                    .build()));
             return EntityResponse.builder().entity(availableServiceDtos).statusCode(HttpStatus.OK).build();
         } catch (Exception e)
         {

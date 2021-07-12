@@ -10,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 @Service
 public class ScheduleService {
 
@@ -41,6 +47,15 @@ public class ScheduleService {
             return EntityResponse.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
                     .error("Error registrando disponibilidad")
                     .build();
+        }
+    }
+
+    public EntityResponse searchServices(final int serviceAvailableId, final LocalTime timeFrom, final LocalTime timeTo, final LocalDate requestDate) {
+        try {
+            availabilityRepository.getAvailableSchedule(serviceAvailableId, requestDate, timeFrom, timeTo);
+            return EntityResponse.builder().build();
+        } catch (Exception e) {
+            return EntityResponse.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR).error(e.getMessage()).build();
         }
     }
 
